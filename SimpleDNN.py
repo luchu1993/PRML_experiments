@@ -26,7 +26,7 @@ class Net():
 
     def forward(self, x):
         for w, b in zip(self.W[:-1], self.b[:-1]):
-            x = sigmoid( np.dot(w, x) + b ) 
+            x = relu( np.dot(w, x) + b ) 
         return np.dot(self.W[-1], x) + self.b[-1]
  
     def backword(self, x, y):
@@ -36,7 +36,7 @@ class Net():
         h = x
         for w, b in zip(self.W[:-1], self.b[:-1]):
             a = np.dot(w, h) + b
-            h = sigmoid(a)
+            h = relu(a)
             activations.append(a)
             hiddens.append(h)
         out = np.dot(self.W[-1], hiddens[-1]) + self.b[-1]
@@ -51,7 +51,7 @@ class Net():
         nabla_b[-1] = delta
 
         for l in range(2, self.num_layers):
-            delta = np.dot(self.W[-l+1].T, delta) * _sigmoid(activations[-l])
+            delta = np.dot(self.W[-l+1].T, delta) * _relu(activations[-l])
             nabla_W[-l] = np.dot( delta, hiddens[-l-1].T)
             nabla_b[-l] = delta
 
@@ -96,8 +96,8 @@ if __name__ == '__main__':
     Y = np.sin(2*np.pi*X) + np.random.normal(0, 0.3, len(X))
     training_data = [ (x , y ) for (x, y) in zip(X, Y) ]
 
-    net = Net([1, 128, 128, 1])
-    train_loss = net.SGD(training_data, epochs=5000, bath_size=5, eta=0.01)
+    net = Net([1, 16, 16, 1])
+    train_loss = net.SGD(training_data, epochs=500, bath_size=5, eta=0.02)
 
     plt.subplot(1, 2, 1)
     plt.scatter(X, Y)
